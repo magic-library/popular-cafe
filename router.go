@@ -1,10 +1,12 @@
-package api
+package main
 
 import "github.com/gin-gonic/gin"
 
-func Route(r *gin.Engine) {
+func Route(r *gin.Engine, config *AppConfig) {
+	rc := NewRouterConfig(config)
 	r.GET("/health-check", wrapper(healthCheck))
-	r.GET("/coffee", wrapper(getCoffeeList))
+	r.GET("/coffee", wrapper(rc.CoffeeController.GetCoffeeList))
+	r.POST("/take-coffee", wrapper(rc.CoffeeController.HandOutCoffee))
 }
 
 func wrapper(f func(c *gin.Context) (interface{}, retCode)) gin.HandlerFunc {
